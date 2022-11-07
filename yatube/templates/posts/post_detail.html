@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
   {% block title %}
-    Пост {{ title }}
+    Пост {{ post.test|truncatechars:30 }}
   {% endblock %}
   {% block content %}
   {% load user_filters %}

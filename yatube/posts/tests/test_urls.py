@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from urllib.parse import urljoin
+from django.core.cache import cache
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
@@ -25,6 +26,7 @@ class StaticUrlTests(TestCase):
         )
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_author = Client()

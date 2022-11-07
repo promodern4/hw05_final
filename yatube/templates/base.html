@@ -19,7 +19,9 @@
       <div class="container">
         <h1> {{ group.title }} </h1>
         <p>{{ group.description }}</p>
-        {% block content %}{% endblock content %}
+        <div class="container py-5">      
+          {% block content %}{% endblock content %}
+        </div>
       </div>
     </main>
     {% include 'includes/footer.html' %}

@@ -61,6 +61,7 @@ class TestPages(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
         self.authorized_author = Client()
         self.authorized_author.force_login(self.author)
@@ -125,7 +126,6 @@ class TestPages(TestCase):
                         kwargs={'post_id': '2'})))
         self.assertEqual(response.context.get('image'), self.post_2.image)
         self.assertEqual(response.context.get('post_id'), self.post_2.id)
-        self.assertEqual(response.context.get('title'), self.post_2.text)
         self.assertEqual(response.context.get('count_posts'),
                          Post.objects.filter(id=self.post_2.id).count())
 
@@ -206,6 +206,7 @@ class PaginatorViewsTest(TestCase):
         Post.objects.bulk_create(lst)
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
 
     def test_page_cotains_correct_number_records(self):

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import cache_page
 
 from .forms import PostForm, CommentForm
 from .models import Group, Post, User, Comment, Follow
@@ -13,6 +14,7 @@ def paginator_func(request, paginator_page):
     return paginator.get_page(page_number)
 
 
+@cache_page(20)
 def index(request):
     posts_list = Post.objects.select_related("group", "author")
     page_obj = paginator_func(request, posts_list)
@@ -39,12 +41,10 @@ def profile(request, username):
     count_posts = author.posts.count()
     posts = author.posts.select_related("group", "author")
     page_obj = paginator_func(request, posts)
-    if request.user.is_authenticated:
-        following = Follow.objects.filter(
-            user=request.user, author=author
-        ).exists()
-    else:
-        following = False
+    following = (request.user.
+                 is_authenticated and (Follow.objects.
+                                       filter(user=request.user,
+                                              author=author).exists()))
     context = {
         'following': following,
         'count_posts': count_posts,
@@ -58,9 +58,8 @@ def profile(request, username):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     count_posts = post.author.posts.count()
-    title = post.text[:30]
     comments = Comment.objects.filter(post=post_id)
-    form = CommentForm(request.POST or None)
+    form = CommentForm()
     if form.is_valid():
         comment = form.save(commit=False)
         comment.author = request.user
@@ -71,7 +70,6 @@ def post_detail(request, post_id):
                'comments': comments,
                'image': post.image,
                'count_posts': count_posts,
-               'title': title,
                'post': post,
                'post_id': post_id,
                }
