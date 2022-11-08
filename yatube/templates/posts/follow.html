@@ -5,9 +5,9 @@
 {% block content %}
   <div class="container">
     {% include 'posts/includes/switcher.html' %}
-        {% for post in page_obj %}
-            {% include 'includes/article.html' with main=True %}
-        {% endfor %}
+    {% for post in page_obj %}
+      {% include 'includes/article.html' with main=True %}
+    {% endfor %}    
   </div>
   {% include 'posts/includes/paginator.html' %}
 {% endblock content %}

@@ -3,14 +3,11 @@
   Последнее обновление на сайте
 {% endblock title %}
 {% block content %}
-  <!--{% load cache %}-->
   {% include 'posts/includes/switcher.html' with index=True %}
   <div class="container">
-    <!--{% cache 20 index_page with page_obj %}-->
     {% for post in page_obj %}
       {% include 'includes/article.html' with main=True %}
     {% endfor %}
-    <!--{% endcache %}-->
   </div>
   {% include 'posts/includes/paginator.html' %}
 {% endblock content %}
