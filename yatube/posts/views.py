@@ -121,6 +121,7 @@ def add_comment(request, post_id):
     return redirect('posts:post_detail', post_id=post_id)
 
 
+@cache_page(20)
 @login_required
 def follow_index(request):
     posts = Post.objects.filter(author__following__user=request.user)
